@@ -32,7 +32,7 @@ export type State = {
         customerId?: string[];
         amount?: string[];
         status?: string[];
-    };
+    } | unknown;
     message?: string | null;
 };
 
