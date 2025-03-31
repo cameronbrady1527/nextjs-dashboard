@@ -12,6 +12,17 @@ import { Button } from '@/app/ui/button';
 import { createInvoice, State } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
+function getErrorMessages(errors: unknown, field: string): string[] {
+  if (
+    errors &&
+    typeof errors === 'object' &&
+    Array.isArray((errors as Record<string, unknown>)[field])
+  ) {
+    return (errors as Record<string, unknown>)[field] as string[];
+  }
+  return [];
+}
+
 export default function Form({ customers }: { customers: CustomerField[] }) {
   const initialState: State = { message: null, errors: {} };
 
@@ -45,12 +56,11 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="customer-error" aria-live="polite" aria-atomic="true">
-              {state.errors && typeof state.errors === 'object' &&
-                (state.errors as any).customerId.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
+              {getErrorMessages(state.errors, 'customerId').map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
           </div>
         </div>
 
